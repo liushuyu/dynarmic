@@ -1,13 +1,14 @@
 Dynarmic
 ========
 
-[![Travis CI Build Status](https://api.travis-ci.org/MerryMage/dynarmic.svg?branch=master)](https://travis-ci.org/MerryMage/dynarmic/branches) [![Appveyor CI Build status](https://ci.appveyor.com/api/projects/status/maeiqr41rgm1innm/branch/master?svg=true)](https://ci.appveyor.com/project/MerryMage/dynarmic/branch/master)
+[![Github Actions Build Status](https://github.com/MerryMage/dynarmic/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/MerryMage/dynarmic/actions/workflows/build-and-test.yml)
 
 A dynamic recompiler for ARM.
 
 ### Supported guest architectures
 
-* ARMv6K
+* ARMv6K, ARMv7A
+* 32-bit ARMv8
 * 64-bit ARMv8
 
 ### Supported host architectures
@@ -15,6 +16,15 @@ A dynamic recompiler for ARM.
 * x86-64
 
 There are no plans to support x86-32.
+
+Projects using Dynarmic
+-----------------------
+
+* [Citra - Nintendo 3DS emulator](https://citra-emu.org)
+* [yuzu - Nintendo Switch emulator](https://yuzu-emu.org)
+* [EKA2L1 - An Experimental Symbian OS emulator](https://github.com/EKA2L1/EKA2L1)
+* [Vita3K - An Experimental PSVita emulator](https://vita3k.org)
+* [unidbg - Android native library emulation, with experimental iOS emulation](https://github.com/zhkl0228/unidbg)
 
 Alternatives to Dynarmic
 ------------------------
@@ -34,7 +44,7 @@ More general alternatives:
 * [VisUAL](https://salmanarif.bitbucket.io/visual/index.html) - Visual ARM UAL emulator intended for education
 * A wide variety of other recompilers, interpreters and emulators can be found embedded in other projects, here are some we would recommend looking at:
   * [firebird's recompiler](https://github.com/nspire-emus/firebird) - Takes more of a call-threaded approach to recompilation
-  * [higan's arm7tdmi emulator](https://gitlab.com/higan/higan/tree/master/higan/component/processor/arm7tdmi) - Very clean code-style
+  * [higan's arm7tdmi emulator](https://github.com/higan-emu/higan/tree/master/higan/component/processor/arm7tdmi) - Very clean code-style
   * [arm-js by ozaki-r](https://github.com/ozaki-r/arm-js) - Emulates ARMv7A and some peripherals of Versatile Express, in the browser
 
 Disadvantages of Dynarmic
@@ -84,8 +94,8 @@ The below is a minimal example. Bring-your-own memory system.
 #include <cstdio>
 #include <exception>
 
-#include <dynarmic/A32/a32.h>
-#include <dynarmic/A32/config.h>
+#include "dynarmic/interface/A32/a32.h"
+#include "dynarmic/interface/A32/config.h"
 
 using u8 = std::uint8_t;
 using u16 = std::uint16_t;
@@ -199,7 +209,7 @@ Legal
 
 dynarmic is under a 0BSD license. See LICENSE.txt for more details.
 
-dynarmic uses several other libraries, whose licenes are included below:
+dynarmic uses several other libraries, whose licenses are included below:
 
 ### catch
 
@@ -349,4 +359,31 @@ THE POSSIBILITY OF SUCH DAMAGE.
 喪失、データの喪失、利益の喪失、業務の中断も含め、またそれに限定されない）直接
 損害、間接損害、偶発的な損害、特別損害、懲罰的損害、または結果損害について、
 一切責任を負わないものとします。
+```
+
+### zydis
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2014-2020 Florian Bernd
+Copyright (c) 2014-2020 Joel Höner
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ```

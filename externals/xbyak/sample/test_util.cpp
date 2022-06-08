@@ -1,11 +1,11 @@
 #include <stdio.h>
-#define XBYAK_NO_OP_NAMES
 #include "xbyak/xbyak_util.h"
 
 #define NUM_OF_ARRAY(x) (sizeof(x) / sizeof(x[0]))
 
 struct PopCountTest : public Xbyak::CodeGenerator {
 	PopCountTest(int n)
+		: Xbyak::CodeGenerator(4096, Xbyak::DontSetProtectRWE)
 	{
 		mov(eax, n);
 		popcnt(eax, eax);
@@ -13,7 +13,7 @@ struct PopCountTest : public Xbyak::CodeGenerator {
 	}
 };
 
-void putCPUinfo()
+void putCPUinfo(bool onlyCpuidFeature)
 {
 	using namespace Xbyak::util;
 	Cpu cpu;
@@ -34,8 +34,6 @@ void putCPUinfo()
 		{ Cpu::tPOPCNT, "popcnt" },
 		{ Cpu::t3DN, "3dn" },
 		{ Cpu::tE3DN, "e3dn" },
-		{ Cpu::tSSE4a, "sse4a" },
-		{ Cpu::tSSE5, "sse5" },
 		{ Cpu::tAESNI, "aesni" },
 		{ Cpu::tRDTSCP, "rdtscp" },
 		{ Cpu::tOSXSAVE, "osxsave(xgetvb)" },
@@ -78,20 +76,38 @@ void putCPUinfo()
 		{ Cpu::tAVX512_VNNI, "avx512_vnni" },
 		{ Cpu::tAVX512_BITALG, "avx512_bitalg" },
 		{ Cpu::tAVX512_VPOPCNTDQ, "avx512_vpopcntdq" },
+		{ Cpu::tAVX512_BF16, "avx512_bf16" },
+		{ Cpu::tAVX512_VP2INTERSECT, "avx512_vp2intersect" },
+		{ Cpu::tAMX_TILE, "amx(tile)" },
+		{ Cpu::tAMX_INT8, "amx(int8)" },
+		{ Cpu::tAMX_BF16, "amx(bf16)" },
+		{ Cpu::tAVX_VNNI, "avx_vnni" },
+		{ Cpu::tAVX512_FP16, "avx512_fp16" },
+		{ Cpu::tWAITPKG, "waitpkg" },
+		{ Cpu::tCLFLUSHOPT, "clflushopt" },
+		{ Cpu::tCLDEMOTE, "cldemote" },
+		{ Cpu::tMOVDIRI, "movdiri" },
+		{ Cpu::tMOVDIR64B, "movdir64b" },
+		{ Cpu::tCLZERO, "clzero" },
 	};
 	for (size_t i = 0; i < NUM_OF_ARRAY(tbl); i++) {
 		if (cpu.has(tbl[i].type)) printf(" %s", tbl[i].str);
 	}
 	printf("\n");
+	if (onlyCpuidFeature) return;
 	if (cpu.has(Cpu::tPOPCNT)) {
 		const int n = 0x12345678; // bitcount = 13
 		const int ok = 13;
-		int r = PopCountTest(n).getCode<int (*)()>()();
+		PopCountTest code(n);
+		code.setProtectModeRE();
+		int (*f)() = code.getCode<int (*)()>();
+		int r = f();
 		if (r == ok) {
 			puts("popcnt ok");
 		} else {
 			printf("popcnt ng %d %d\n", r, ok);
 		}
+		code.setProtectModeRW();
 	}
 	/*
 		                displayFamily displayModel
@@ -112,12 +128,15 @@ void putCPUinfo()
 	printf("CoreLevel=%u\n", cpu.getNumCores(Xbyak::util::CoreLevel));
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+	bool onlyCpuidFeature = argc == 2 && strcmp(argv[1], "-cpuid") == 0;
+	if (!onlyCpuidFeature) {
 #ifdef XBYAK32
-	puts("32bit");
+		puts("32bit");
 #else
-	puts("64bit");
+		puts("64bit");
 #endif
-	putCPUinfo();
+	}
+	putCPUinfo(onlyCpuidFeature);
 }
