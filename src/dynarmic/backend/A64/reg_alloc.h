@@ -12,14 +12,13 @@
 #include <vector>
 
 #include <optional>
+#include <mcl/stdint.hpp>
 
-#include "backend/A64/block_of_code.h"
-#include "backend/A64/hostloc.h"
-//#include "backend/A64/oparg.h"
-#include "common/common_types.h"
-#include "frontend/ir/cond.h"
-#include "frontend/ir/microinstruction.h"
-#include "frontend/ir/value.h"
+#include "dynarmic/backend/A64/block_of_code.h"
+#include "dynarmic/backend/A64/hostloc.h"
+#include "dynarmic/ir/cond.h"
+#include "dynarmic/ir/microinstruction.h"
+#include "dynarmic/ir/value.h"
 
 namespace Dynarmic::BackendA64 {
 

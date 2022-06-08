@@ -17,7 +17,7 @@
 
 #include <fmt/format.h>
 
-#include "common/common_types.h"
+#include <mcl/stdint.hpp>
 
 namespace Dynarmic::BackendA64 {
 

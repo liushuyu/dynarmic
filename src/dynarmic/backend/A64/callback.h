@@ -9,8 +9,8 @@
 #include <functional>
 #include <vector>
 
-#include "backend/A64/emitter/a64_emitter.h"
-#include "common/common_types.h"
+#include "dynarmic/backend/A64/emitter/a64_emitter.h"
+#include <mcl/stdint.hpp>
 
 namespace Dynarmic::BackendA64 {
 

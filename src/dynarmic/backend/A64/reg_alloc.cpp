@@ -9,10 +9,10 @@
 #include <utility>
 
 #include <fmt/ostream.h>
+#include <mcl/assert.hpp>
 
-#include "backend/A64/abi.h"
-#include "backend/A64/reg_alloc.h"
-#include "common/assert.h"
+#include "dynarmic/backend/A64/abi.h"
+#include "dynarmic/backend/A64/reg_alloc.h"
 
 namespace Dynarmic::BackendA64 {
 
@@ -47,6 +47,7 @@ static size_t GetBitWidth(IR::Type type) {
     case IR::Type::CoprocInfo:
     case IR::Type::Cond:
     case IR::Type::Void:
+    case IR::Type::AccType:
     case IR::Type::Table:
         ASSERT_FALSE("Type {} cannot be represented at runtime", type);
         return 0;

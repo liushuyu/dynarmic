@@ -10,8 +10,8 @@
 #include <memory>
 #include <functional>
 
-#include "backend/A64/a32_jitstate.h"
-#include "common/common_types.h"
+#include "dynarmic/backend/A64/a32_jitstate.h"
+#include <mcl/stdint.hpp>
 
 namespace Dynarmic::BackendA64 {
 

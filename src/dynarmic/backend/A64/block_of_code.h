@@ -10,11 +10,12 @@
 #include <memory>
 #include <type_traits>
 
-#include "backend/A64/callback.h"
-#include "backend/A64/constant_pool.h"
-#include "backend/A64/jitstate_info.h"
-#include "backend/A64/emitter/a64_emitter.h"
-#include "common/common_types.h"
+#include <mcl/stdint.hpp>
+
+#include "dynarmic/backend/A64/callback.h"
+#include "dynarmic/backend/A64/constant_pool.h"
+#include "dynarmic/backend/A64/jitstate_info.h"
+#include "dynarmic/backend/A64/emitter/a64_emitter.h"
 
 namespace Dynarmic::BackendA64 {
 

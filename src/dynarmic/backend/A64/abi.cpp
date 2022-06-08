@@ -17,10 +17,10 @@
 #include <algorithm>
 #include <vector>
 
-#include "backend/A64/abi.h"
-#include "common/common_types.h"
-#include "common/math_util.h"
-#include "common/iterator_util.h"
+#include <mcl/stdint.hpp>
+
+#include "dynarmic/backend/A64/abi.h"
+#include "dynarmic/common/math_util.h"
 
 namespace Dynarmic::BackendA64 {
 

@@ -5,27 +5,29 @@
  */
 
 #include <memory>
+#include <vector>
 
 #include <boost/icl/interval_set.hpp>
 #include <fmt/format.h>
 
-#include <dynarmic/A32/a32.h>
-#include <dynarmic/A32/context.h>
+#include <dynarmic/interface/A32/a32.h>
+#include <dynarmic/interface/A32/context.h>
 
-#include "backend/A64/a32_emit_a64.h"
-#include "backend/A64/a32_jitstate.h"
-#include "backend/A64/block_of_code.h"
-#include "backend/A64/callback.h"
-#include "backend/A64/devirtualize.h"
-#include "backend/A64/jitstate_info.h"
-#include "common/assert.h"
-#include "common/common_types.h"
-#include "common/llvm_disassemble.h"
-#include "common/scope_exit.h"
-#include "frontend/A32/translate/translate.h"
-#include "frontend/ir/basic_block.h"
-#include "frontend/ir/location_descriptor.h"
-#include "ir_opt/passes.h"
+#include <mcl/assert.hpp>
+#include <mcl/stdint.hpp>
+#include <mcl/scope_exit.hpp>
+
+#include "dynarmic/backend/A64/a32_emit_a64.h"
+#include "dynarmic/backend/A64/a32_jitstate.h"
+#include "dynarmic/backend/A64/block_of_code.h"
+#include "dynarmic/backend/A64/callback.h"
+#include "dynarmic/backend/A64/devirtualize.h"
+#include "dynarmic/backend/A64/jitstate_info.h"
+#include "dynarmic/common/llvm_disassemble.h"
+#include "dynarmic/frontend/A32/translate/a32_translate.h"
+#include "dynarmic/ir/basic_block.h"
+#include "dynarmic/ir/location_descriptor.h"
+#include "dynarmic/ir/opt/passes.h"
 
 namespace Dynarmic::A32 {
 
@@ -154,8 +156,9 @@ private:
             PerformCacheInvalidation();
         }
 
-        IR::Block ir_block = A32::Translate(A32::LocationDescriptor{descriptor}, [this](u32 vaddr) { return config.callbacks->MemoryReadCode(vaddr); }, {config.define_unpredictable_behaviour, config.hook_hint_instructions});
-        if (config.enable_optimizations) {
+        IR::Block ir_block = A32::Translate(A32::LocationDescriptor{descriptor}, config.callbacks, {config.arch_version, config.define_unpredictable_behaviour, config.hook_hint_instructions});
+        // TODO(liushuyu): actually handle the optimization flags
+        if (!!config.optimizations) {
             Optimization::A32GetSetElimination(ir_block);
             Optimization::DeadCodeElimination(ir_block);
             Optimization::A32ConstantMemoryReads(ir_block, config.callbacks);
@@ -172,7 +175,7 @@ Jit::Jit(UserConfig config) : impl(std::make_unique<Impl>(this, std::move(config
 
 Jit::~Jit() = default;
 
-void Jit::Run() {
+HaltReason Jit::Run() {
     ASSERT(!is_executing);
     is_executing = true;
     SCOPE_EXIT { this->is_executing = false; };
@@ -182,9 +185,10 @@ void Jit::Run() {
     impl->Execute();
 
     impl->PerformCacheInvalidation();
+    return HaltReason::CacheInvalidation;
 }
 
-void Jit::Step() {
+HaltReason Jit::Step() {
     ASSERT(!is_executing);
     is_executing = true;
     SCOPE_EXIT { this->is_executing = false; };
@@ -194,6 +198,7 @@ void Jit::Step() {
     impl->Step();
 
     impl->PerformCacheInvalidation();
+    return HaltReason::Step;
 }
 
 void Jit::ClearCache() {
@@ -209,10 +214,6 @@ void Jit::InvalidateCacheRange(std::uint32_t start_address, std::size_t length) 
 void Jit::Reset() {
     ASSERT(!is_executing);
     impl->jit_state = {};
-}
-
-void Jit::HaltExecution() {
-    impl->jit_state.halt_requested = true;
 }
 
 std::array<u32, 16>& Jit::Regs() {
@@ -307,14 +308,14 @@ void Jit::LoadContext(const Context& ctx) {
     impl->jit_state.TransferJitState(ctx.impl->jit_state, reset_rsb);
 }
 
-std::string Jit::Disassemble() const {
-    std::string result;
+std::vector<std::string> Jit::Disassemble() const {
+    auto result = std::vector<std::string>{};
 #ifdef DYNARMIC_USE_LLVM
     for (const u32* pos = reinterpret_cast<const u32*>(impl->block_of_code.GetCodeBegin());
          reinterpret_cast<const u8*>(pos) < reinterpret_cast<const u8*>(impl->block_of_code.GetCodePtr()); pos += 1) {
         fmt::print("0x{:02x} 0x{:02x} ", reinterpret_cast<u64>(pos), *pos);
         fmt::print("{}", Common::DisassembleAArch64(*pos, reinterpret_cast<u64>(pos)));
-        result += Common::DisassembleAArch64(*pos, reinterpret_cast<u64>(pos));
+        result.push_back(Common::DisassembleAArch64(*pos, reinterpret_cast<u64>(pos)));
     }
 #endif
     return result;

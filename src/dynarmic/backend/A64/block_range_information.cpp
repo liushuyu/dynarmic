@@ -9,8 +9,9 @@
 #include <boost/icl/interval_map.hpp>
 #include <boost/icl/interval_set.hpp>
 
-#include "backend/A64/block_range_information.h"
-#include "common/common_types.h"
+#include <mcl/stdint.hpp>
+
+#include "dynarmic/backend/A64/block_range_information.h"
 
 namespace Dynarmic::BackendA64 {
 

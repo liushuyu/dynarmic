@@ -8,20 +8,21 @@
 #include <type_traits>
 #include <utility>
 
-#include "backend/A64/abi.h"
-#include "backend/A64/block_of_code.h"
-#include "backend/A64/emit_a64.h"
-#include "common/assert.h"
-#include "common/common_types.h"
-#include "common/fp/fpcr.h"
-#include "common/fp/fpsr.h"
-#include "common/fp/info.h"
-#include "common/fp/op.h"
-#include "common/fp/rounding_mode.h"
-#include "common/fp/util.h"
-#include "frontend/ir/basic_block.h"
-#include "frontend/ir/microinstruction.h"
-#include "frontend/ir/opcodes.h"
+#include <mcl/assert.hpp>
+#include <mcl/stdint.hpp>
+
+#include "dynarmic/backend/A64/abi.h"
+#include "dynarmic/backend/A64/block_of_code.h"
+#include "dynarmic/backend/A64/emit_a64.h"
+#include "dynarmic/common/fp/fpcr.h"
+#include "dynarmic/common/fp/fpsr.h"
+#include "dynarmic/common/fp/info.h"
+#include "dynarmic/common/fp/op.h"
+#include "dynarmic/common/fp/rounding_mode.h"
+#include "dynarmic/common/fp/util.h"
+#include "dynarmic/ir/basic_block.h"
+#include "dynarmic/ir/microinstruction.h"
+#include "dynarmic/ir/opcodes.h"
 
 namespace Dynarmic::BackendA64 {
 

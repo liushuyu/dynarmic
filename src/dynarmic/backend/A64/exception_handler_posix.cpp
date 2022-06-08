@@ -18,12 +18,13 @@
 #include <ucontext.h>
 #endif
 
-#include "backend/A64/a32_jitstate.h"
-#include "backend/A64/block_of_code.h"
-#include "backend/A64/exception_handler.h"
-#include "common/assert.h"
-#include "common/cast_util.h"
-#include "common/common_types.h"
+#include <mcl/bit_cast.hpp>
+#include <mcl/assert.hpp>
+#include <mcl/stdint.hpp>
+
+#include "dynarmic/backend/A64/a32_jitstate.h"
+#include "dynarmic/backend/A64/block_of_code.h"
+#include "dynarmic/backend/A64/exception_handler.h"
 
 namespace Dynarmic::BackendA64 {
 

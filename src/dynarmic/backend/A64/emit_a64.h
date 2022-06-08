@@ -14,12 +14,15 @@
 #include <unordered_set>
 #include <vector>
 
-#include "backend/A64/reg_alloc.h"
-#include "backend/A64/emitter/a64_emitter.h"
-#include "common/bit_util.h"
-#include "common/fp/rounding_mode.h"
-#include "frontend/ir/location_descriptor.h"
-#include "frontend/ir/terminal.h"
+#include <mcl/bit/bit_count.hpp>
+#include <mcl/bit/bit_field.hpp>
+
+#include "dynarmic/backend/A64/reg_alloc.h"
+#include "dynarmic/backend/A64/emitter/a64_emitter.h"
+#include "dynarmic/common/fp/rounding_mode.h"
+#include "dynarmic/ir/location_descriptor.h"
+#include "dynarmic/ir/terminal.h"
+#include "mcl/bitsizeof.hpp"
 
 namespace Dynarmic::IR {
 class Block;
@@ -38,7 +41,7 @@ using A64FullVectorWidth = std::integral_constant<size_t, 128>;
 // relative to the size of a vector register. e.g. T = u32 would result
 // in a std::array<u32, 4>.
 template <typename T>
-using VectorArray = std::array<T, A64FullVectorWidth::value / Common::BitSize<T>()>;
+using VectorArray = std::array<T, A64FullVectorWidth::value / mcl::bitsizeof<T>()>;
 
 struct EmitContext {
     EmitContext(RegAlloc& reg_alloc, IR::Block& block);
@@ -79,7 +82,7 @@ protected:
 #define OPCODE(name, type, ...) void Emit##name(EmitContext& ctx, IR::Inst* inst);
 #define A32OPC(...)
 #define A64OPC(...)
-#include "backend/A64/opcodes.inc"
+#include "dynarmic/backend/A64/opcodes.inc"
 #undef OPCODE
 #undef A32OPC
 #undef A64OPC
