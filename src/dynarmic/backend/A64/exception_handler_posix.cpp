@@ -8,18 +8,17 @@
 // Licensed under GPLv2+
 // Refer to the license.txt file included.
 
+#include <csignal>
 #include <mutex>
 #include <vector>
-
-#include <csignal>
 #ifdef __APPLE__
-#include <sys/ucontext.h>
+#    include <sys/ucontext.h>
 #else
-#include <ucontext.h>
+#    include <ucontext.h>
 #endif
 
-#include <mcl/bit_cast.hpp>
 #include <mcl/assert.hpp>
+#include <mcl/bit_cast.hpp>
 #include <mcl/stdint.hpp>
 
 #include "dynarmic/backend/A64/a32_jitstate.h"
@@ -119,8 +118,7 @@ void SigHandler::SigAction(int sig, siginfo_t* info, void* raw_context) {
         "dynarmic: POSIX SigHandler: Exception was not in registered code blocks (PC {})\n",
         PC);
 
-    struct sigaction* retry_sa =
-        sig == SIGSEGV ? &sig_handler.old_sa_segv : &sig_handler.old_sa_bus;
+    struct sigaction* retry_sa = sig == SIGSEGV ? &sig_handler.old_sa_segv : &sig_handler.old_sa_bus;
     if (retry_sa->sa_flags & SA_SIGINFO) {
         retry_sa->sa_sigaction(sig, info, raw_context);
         return;
@@ -135,7 +133,7 @@ void SigHandler::SigAction(int sig, siginfo_t* info, void* raw_context) {
     retry_sa->sa_handler(sig);
 }
 
-} // anonymous namespace
+}  // anonymous namespace
 
 struct ExceptionHandler::Impl final {
     Impl(BlockOfCode& code, std::function<void(CodePtr)> cb) {
@@ -164,4 +162,4 @@ bool ExceptionHandler::SupportsFastmem() const {
     return static_cast<bool>(impl);
 }
 
-} // namespace Dynarmic::BackendA64
+}  // namespace Dynarmic::BackendA64

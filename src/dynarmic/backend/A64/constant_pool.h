@@ -29,7 +29,7 @@ public:
     void Clear();
 
 private:
-    static constexpr size_t align_size = 16; // bytes
+    static constexpr size_t align_size = 16;  // bytes
 
     std::map<std::tuple<u64, u64>, void*> constant_info;
 
@@ -44,4 +44,4 @@ private:
     std::vector<PatchInfo> patch_info;
 };
 
-} // namespace Dynarmic::BackendA64
+}  // namespace Dynarmic::BackendA64

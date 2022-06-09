@@ -8,10 +8,10 @@
 
 #include <array>
 #include <functional>
+#include <optional>
 #include <utility>
 #include <vector>
 
-#include <optional>
 #include <mcl/stdint.hpp>
 
 #include "dynarmic/backend/A64/block_of_code.h"
@@ -84,7 +84,8 @@ public:
 
 private:
     friend class RegAlloc;
-    explicit Argument(RegAlloc& reg_alloc) : reg_alloc(reg_alloc) {}
+    explicit Argument(RegAlloc& reg_alloc)
+            : reg_alloc(reg_alloc) {}
 
     bool allocated = false;
     RegAlloc& reg_alloc;
@@ -96,13 +97,13 @@ public:
     using ArgumentInfo = std::array<Argument, IR::max_arg_count>;
 
     explicit RegAlloc(BlockOfCode& code, size_t num_spills, std::function<u64(HostLoc)> spill_to_addr)
-        : hostloc_info(NonSpillHostLocCount + num_spills), code(code), spill_to_addr(std::move(spill_to_addr)) {}
+            : hostloc_info(NonSpillHostLocCount + num_spills), code(code), spill_to_addr(std::move(spill_to_addr)) {}
 
     ArgumentInfo GetArgumentInfo(IR::Inst* inst);
 
     Arm64Gen::ARM64Reg UseGpr(Argument& arg);
     Arm64Gen::ARM64Reg UseFpr(Argument& arg);
-    //OpArg UseOpArg(Argument& arg);
+    // OpArg UseOpArg(Argument& arg);
     void Use(Argument& arg, HostLoc host_loc);
 
     Arm64Gen::ARM64Reg UseScratchGpr(Argument& arg);
@@ -117,14 +118,7 @@ public:
     Arm64Gen::ARM64Reg ScratchGpr(HostLocList desired_locations = any_gpr);
     Arm64Gen::ARM64Reg ScratchFpr(HostLocList desired_locations = any_fpr);
 
-    void HostCall(IR::Inst* result_def = nullptr, std::optional<Argument::copyable_reference> arg0 = {},
-                  std::optional<Argument::copyable_reference> arg1 = {}, 
-                  std::optional<Argument::copyable_reference> arg2 = {},
-                  std::optional<Argument::copyable_reference> arg3 = {},
-                  std::optional<Argument::copyable_reference> arg4 = {},
-                  std::optional<Argument::copyable_reference> arg5 = {},
-                  std::optional<Argument::copyable_reference> arg6 = {},
-                  std::optional<Argument::copyable_reference> arg7 = {});
+    void HostCall(IR::Inst* result_def = nullptr, std::optional<Argument::copyable_reference> arg0 = {}, std::optional<Argument::copyable_reference> arg1 = {}, std::optional<Argument::copyable_reference> arg2 = {}, std::optional<Argument::copyable_reference> arg3 = {}, std::optional<Argument::copyable_reference> arg4 = {}, std::optional<Argument::copyable_reference> arg5 = {}, std::optional<Argument::copyable_reference> arg6 = {}, std::optional<Argument::copyable_reference> arg7 = {});
 
     // TODO: Values in host flags
 
@@ -163,4 +157,4 @@ private:
     void EmitExchange(HostLoc a, HostLoc b);
 };
 
-} // namespace Dynarmic::BackendA64
+}  // namespace Dynarmic::BackendA64

@@ -9,9 +9,9 @@
 #include <cstring>
 #include <memory>
 
-#include <mcl/stdint.hpp>
 #include <mcl/assert.hpp>
 #include <mcl/bit_cast.hpp>
+#include <mcl/stdint.hpp>
 #include <mcl/type_traits/function_info.hpp>
 
 #include "dynarmic/backend/A64/callback.h"
@@ -21,17 +21,17 @@ namespace Dynarmic::BackendA64 {
 
 namespace impl {
 
-template <typename FunctionType, FunctionType mfp>
+template<typename FunctionType, FunctionType mfp>
 struct ThunkBuilder;
 
-template <typename C, typename R, typename... Args, R(C::*mfp)(Args...)>
-struct ThunkBuilder<R(C::*)(Args...), mfp> {
+template<typename C, typename R, typename... Args, R (C::*mfp)(Args...)>
+struct ThunkBuilder<R (C::*)(Args...), mfp> {
     static R Thunk(C* this_, Args... args) {
         return (this_->*mfp)(std::forward<Args>(args)...);
     }
 };
 
-} // namespace impl
+}  // namespace impl
 
 template<auto mfp>
 ArgCallback DevirtualizeGeneric(mcl::class_type<decltype(mfp)>* this_) {
@@ -75,4 +75,4 @@ ArgCallback Devirtualize(mcl::class_type<decltype(mfp)>* this_) {
 #endif
 }
 
-} // namespace Dynarmic::BackendA64
+}  // namespace Dynarmic::BackendA64

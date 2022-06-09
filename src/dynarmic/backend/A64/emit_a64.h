@@ -17,8 +17,8 @@
 #include <mcl/bit/bit_count.hpp>
 #include <mcl/bit/bit_field.hpp>
 
-#include "dynarmic/backend/A64/reg_alloc.h"
 #include "dynarmic/backend/A64/emitter/a64_emitter.h"
+#include "dynarmic/backend/A64/reg_alloc.h"
 #include "dynarmic/common/fp/rounding_mode.h"
 #include "dynarmic/ir/location_descriptor.h"
 #include "dynarmic/ir/terminal.h"
@@ -27,7 +27,7 @@
 namespace Dynarmic::IR {
 class Block;
 class Inst;
-} // namespace Dynarmic::IR
+}  // namespace Dynarmic::IR
 
 namespace Dynarmic::BackendA64 {
 
@@ -40,7 +40,7 @@ using A64FullVectorWidth = std::integral_constant<size_t, 128>;
 // Array alias that always sizes itself according to the given type T
 // relative to the size of a vector register. e.g. T = u32 would result
 // in a std::array<u32, 4>.
-template <typename T>
+template<typename T>
 using VectorArray = std::array<T, A64FullVectorWidth::value / mcl::bitsizeof<T>()>;
 
 struct EmitContext {
@@ -124,4 +124,4 @@ protected:
     std::unordered_map<IR::LocationDescriptor, PatchInformation> patch_information;
 };
 
-} // namespace Dynarmic::BackendX64
+}  // namespace Dynarmic::BackendA64

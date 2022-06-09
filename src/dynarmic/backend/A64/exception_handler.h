@@ -7,11 +7,12 @@
 #pragma once
 
 #include <array>
-#include <memory>
 #include <functional>
+#include <memory>
+
+#include <mcl/stdint.hpp>
 
 #include "dynarmic/backend/A64/a32_jitstate.h"
-#include <mcl/stdint.hpp>
 
 namespace Dynarmic::BackendA64 {
 
@@ -31,9 +32,10 @@ public:
     void Register(BlockOfCode& code, std::function<void(CodePtr)> segv_callback = nullptr);
 
     bool SupportsFastmem() const;
+
 private:
     struct Impl;
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Dynarmic::BackendA64
+}  // namespace Dynarmic::BackendA64

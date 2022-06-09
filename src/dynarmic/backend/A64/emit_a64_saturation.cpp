@@ -7,8 +7,8 @@
 #include <limits>
 
 #include <mcl/assert.hpp>
-#include <mcl/stdint.hpp>
 #include <mcl/bit/bit_field.hpp>
+#include <mcl/stdint.hpp>
 
 #include "dynarmic/backend/A64/block_of_code.h"
 #include "dynarmic/backend/A64/emit_a64.h"
@@ -36,8 +36,7 @@ void EmitSignedSaturatedOp(BlockOfCode& code, EmitContext& ctx, IR::Inst* inst) 
 
     if constexpr (op == Op::Add) {
         code.fp_emitter.SQADD(size, result, result, addend);
-    }
-    else {
+    } else {
         code.fp_emitter.SQSUB(size, result, result, addend);
     }
 
@@ -53,7 +52,7 @@ void EmitSignedSaturatedOp(BlockOfCode& code, EmitContext& ctx, IR::Inst* inst) 
 
     ctx.reg_alloc.DefineValue(inst, result);
 }
-} // anonymous namespace
+}  // anonymous namespace
 
 void EmitA64::EmitSignedSaturatedAdd8(EmitContext& ctx, IR::Inst* inst) {
     EmitSignedSaturatedOp<Op::Add, 8>(code, ctx, inst);
@@ -165,4 +164,4 @@ void EmitA64::EmitUnsignedSaturation(EmitContext& ctx, IR::Inst* inst) {
     ctx.reg_alloc.DefineValue(inst, result);
 }
 
-} // namespace Dynarmic::BackendA64
+}  // namespace Dynarmic::BackendA64

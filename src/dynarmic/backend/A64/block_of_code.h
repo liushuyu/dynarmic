@@ -14,8 +14,8 @@
 
 #include "dynarmic/backend/A64/callback.h"
 #include "dynarmic/backend/A64/constant_pool.h"
-#include "dynarmic/backend/A64/jitstate_info.h"
 #include "dynarmic/backend/A64/emitter/a64_emitter.h"
+#include "dynarmic/backend/A64/jitstate_info.h"
 
 namespace Dynarmic::BackendA64 {
 
@@ -32,7 +32,6 @@ class BlockOfCode final : public Arm64Gen::ARM64CodeBlock {
 public:
     BlockOfCode(RunCodeCallbacks cb, JitStateInfo jsi);
     BlockOfCode(const BlockOfCode&) = delete;
-
 
     /// Call when external emitters have finished emitting their preludes.
     void PreludeComplete();
@@ -134,7 +133,7 @@ private:
     CodePtr near_code_ptr;
     CodePtr far_code_ptr;
 
-    using RunCodeFuncType = void(*)(void*, CodePtr);
+    using RunCodeFuncType = void (*)(void*, CodePtr);
     RunCodeFuncType run_code = nullptr;
     RunCodeFuncType step_code = nullptr;
     static constexpr size_t FPSCR_ALREADY_EXITED = 1 << 0;
@@ -142,7 +141,7 @@ private:
     std::array<const void*, 4> return_from_run_code;
     void GenRunCode();
 
-    //Xbyak::util::Cpu cpu_info;
+    // Xbyak::util::Cpu cpu_info;
 };
 
-} // namespace Dynarmic::BackendA64
+}  // namespace Dynarmic::BackendA64
